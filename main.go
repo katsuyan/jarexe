@@ -4,13 +4,36 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"regexp"
+	"strings"
+
+	flag "github.com/spf13/pflag"
 )
 
 func main() {
-	file1, _ := os.Open(os.Args[1])
-	file2, _ := os.Open(os.Args[2])
-	reader := io.MultiReader(file1, file2)
+
+	var (
+		exeFileName = flag.String("name", "exejar_default", "exe file name")
+	)
+
+	flag.Parse()
+
+	jarFileName := flag.Args()[0]
+	jarFile, _ := os.Open(jarFileName)
+
+	rep := regexp.MustCompile(`.*\/(.*).jar`)
+	defaultExeFileName := rep.ReplaceAllString(jarFileName, "$1")
+
+	if *exeFileName == "exejar_default" {
+		*exeFileName = defaultExeFileName
+	}
+
+	shStr := `#!/bin/sh
+	exec java -jar "$0"
+	exit 1`
+
+	reader := io.MultiReader(strings.NewReader(shStr), jarFile)
 
 	b, _ := ioutil.ReadAll(reader)
-	ioutil.WriteFile("runrun", b, os.ModePerm)
+	ioutil.WriteFile(*exeFileName, b, os.ModePerm)
 }
