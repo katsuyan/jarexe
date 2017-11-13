@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -13,7 +14,8 @@ import (
 func main() {
 
 	var (
-		exeFileName = flag.String("name", "exejar_default", "exe file name")
+		exeFileName = flag.String("name", "", "exe file name")
+		javaOptions = flag.String("jop", "", "java options")
 	)
 
 	flag.Parse()
@@ -24,13 +26,13 @@ func main() {
 	rep := regexp.MustCompile(`.*\/(.*).jar`)
 	defaultExeFileName := rep.ReplaceAllString(jarFileName, "$1")
 
-	if *exeFileName == "exejar_default" {
+	if *exeFileName == "" {
 		*exeFileName = defaultExeFileName
 	}
 
-	shStr := `#!/bin/sh
-	exec java -jar "$0" "$@"
-	exit 1`
+	shStr := fmt.Sprintf(`#!/bin/sh
+    exec java %s -jar "$0" "$@"
+	  exit 1`, *javaOptions)
 
 	reader := io.MultiReader(strings.NewReader(shStr), jarFile)
 
