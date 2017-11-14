@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -20,6 +21,10 @@ func main() {
 	)
 
 	flag.Parse()
+
+	if len(flag.Args()) == 0 {
+		panic(errors.New("Not enough arguments. ex)jarexe standalone.jar"))
+	}
 
 	jarFileName := flag.Args()[0]
 	jarFile, err := os.Open(jarFileName)
