@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"regexp"
 	"strings"
@@ -21,7 +22,11 @@ func main() {
 	flag.Parse()
 
 	jarFileName := flag.Args()[0]
-	jarFile, _ := os.Open(jarFileName)
+	jarFile, err := os.Open(jarFileName)
+	if err != nil {
+		log.Printf("error: %s", err.Error())
+		panic(err.Error())
+	}
 
 	rep := regexp.MustCompile(`.*\/(.*).jar`)
 	defaultExeFileName := rep.ReplaceAllString(jarFileName, "$1")
@@ -31,11 +36,15 @@ func main() {
 	}
 
 	shStr := fmt.Sprintf(`#!/bin/sh
-    exec java %s -jar "$0" "$@"
-	  exit $?`, *javaOptions)
+		exec java %s -jar "$0" "$@"
+		exit $?`, *javaOptions)
 
 	reader := io.MultiReader(strings.NewReader(shStr), jarFile)
 
-	b, _ := ioutil.ReadAll(reader)
+	b, err := ioutil.ReadAll(reader)
+	if err != nil {
+		log.Printf("error: %s", err.Error())
+		panic(err.Error())
+	}
 	ioutil.WriteFile(*exeFileName, b, os.ModePerm)
 }
