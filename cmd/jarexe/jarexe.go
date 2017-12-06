@@ -13,12 +13,12 @@ import (
 )
 
 func main() {
-
 	var (
-		exeFileName = flag.String("name", "", "exe file name")
-		javaOptions = flag.String("jop", "", "java options")
+		exeFileName string
+		javaOptions string
 	)
-
+	flag.StringVar(&exeFileName, "name", "", "exe file name")
+	flag.StringVar(&javaOptions, "jop", "", "java options")
 	flag.Parse()
 
 	if len(flag.Args()) == 0 {
@@ -32,16 +32,16 @@ func main() {
 	}
 	defer jarFile.Close()
 
-	if *exeFileName == "" {
-		*exeFileName = filepath.Base(jarFileName)
-		if ext := filepath.Ext(*exeFileName); ext == ".jar" {
-			*exeFileName = (*exeFileName)[:len(*exeFileName)-4]
+	if exeFileName == "" {
+		exeFileName = filepath.Base(jarFileName)
+		if ext := filepath.Ext(exeFileName); ext == ".jar" {
+			exeFileName = exeFileName[:len(exeFileName)-4]
 		}
 	}
 
 	shStr := fmt.Sprintf(`#!/bin/sh
 		exec java %s -jar "$0" "$@"
-		exit $?`, *javaOptions)
+		exit $?`, javaOptions)
 
 	reader := io.MultiReader(strings.NewReader(shStr), jarFile)
 
@@ -49,5 +49,5 @@ func main() {
 	if err != nil {
 		log.Fatalf("error: %s", err.Error())
 	}
-	ioutil.WriteFile(*exeFileName, b, os.ModePerm)
+	ioutil.WriteFile(exeFileName, b, os.ModePerm)
 }
