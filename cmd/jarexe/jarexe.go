@@ -12,6 +12,11 @@ import (
 	flag "github.com/spf13/pflag"
 )
 
+const cmdStr = `#!/bin/sh
+exec java %s -jar "$0" "$@"
+exit $?
+`
+
 func main() {
 	var (
 		exeFileName string
@@ -39,9 +44,7 @@ func main() {
 		}
 	}
 
-	shStr := fmt.Sprintf(`#!/bin/sh
-		exec java %s -jar "$0" "$@"
-		exit $?`, javaOptions)
+	shStr := fmt.Sprintf(cmdStr, javaOptions)
 
 	reader := io.MultiReader(strings.NewReader(shStr), jarFile)
 
