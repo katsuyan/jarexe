@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"regexp"
+	"path/filepath"
 	"strings"
 
 	flag "github.com/spf13/pflag"
@@ -32,8 +32,10 @@ func main() {
 	}
 	defer jarFile.Close()
 
-	rep := regexp.MustCompile(`.*\/(.*).jar`)
-	defaultExeFileName := rep.ReplaceAllString(jarFileName, "$1")
+	defaultExeFileName := filepath.Base(jarFileName)
+	if ext := filepath.Ext(defaultExeFileName); ext == ".jar" {
+		defaultExeFileName = defaultExeFileName[:len(defaultExeFileName)-4]
+	}
 
 	if *exeFileName == "" {
 		*exeFileName = defaultExeFileName
