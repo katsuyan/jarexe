@@ -32,13 +32,11 @@ func main() {
 	}
 	defer jarFile.Close()
 
-	defaultExeFileName := filepath.Base(jarFileName)
-	if ext := filepath.Ext(defaultExeFileName); ext == ".jar" {
-		defaultExeFileName = defaultExeFileName[:len(defaultExeFileName)-4]
-	}
-
 	if *exeFileName == "" {
-		*exeFileName = defaultExeFileName
+		*exeFileName = filepath.Base(jarFileName)
+		if ext := filepath.Ext(*exeFileName); ext == ".jar" {
+			*exeFileName = (*exeFileName)[:len(*exeFileName)-4]
+		}
 	}
 
 	shStr := fmt.Sprintf(`#!/bin/sh
