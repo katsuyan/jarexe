@@ -52,5 +52,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("error: %s", err.Error())
 	}
-	ioutil.WriteFile(exeFileName, b, os.ModePerm)
+	err = ioutil.WriteFile(exeFileName, b, os.ModePerm)
+	if err != nil {
+		log.Fatalf("error: %s", err.Error())
+	}
 }
