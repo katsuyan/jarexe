@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -23,15 +22,15 @@ func main() {
 	flag.Parse()
 
 	if len(flag.Args()) == 0 {
-		panic(errors.New("Not enough arguments. ex)jarexe standalone.jar"))
+		log.Fatal("Not enough arguments. ex)jarexe standalone.jar")
 	}
 
 	jarFileName := flag.Args()[0]
 	jarFile, err := os.Open(jarFileName)
 	if err != nil {
-		log.Printf("error: %s", err.Error())
-		panic(err.Error())
+		log.Fatalf("error: %s", err.Error())
 	}
+	defer jarFile.Close()
 
 	rep := regexp.MustCompile(`.*\/(.*).jar`)
 	defaultExeFileName := rep.ReplaceAllString(jarFileName, "$1")
@@ -48,8 +47,7 @@ func main() {
 
 	b, err := ioutil.ReadAll(reader)
 	if err != nil {
-		log.Printf("error: %s", err.Error())
-		panic(err.Error())
+		log.Fatalf("error: %s", err.Error())
 	}
 	ioutil.WriteFile(*exeFileName, b, os.ModePerm)
 }
