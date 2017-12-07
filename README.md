@@ -11,10 +11,6 @@ convert jar file into executable file.
 
 * Go 1.8
 
-## Author
-
-Katsuya Tajima
-
 ## LICENSE
 
 MIT
