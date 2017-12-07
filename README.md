@@ -14,13 +14,13 @@ jarexe ~.jar
 - Go 1.8
 - [dep](https://github.com/golang/dep)
 
-## development
+## Development
 ### First
 ```
 dep ensure
 ```
 
-### run
+### Run
 ```
 go run main.go
 ```
