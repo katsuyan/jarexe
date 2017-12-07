@@ -1,2 +1,2 @@
 build:
-	go build cmd/jarexe.go
+	go build cmd/jarexe/jarexe.go
