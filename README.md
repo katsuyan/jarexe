@@ -4,7 +4,7 @@ convert jar file into executable file.
 
 ## How to run
 
-    go get github.com/katsuyan/cmd/jarexe
+    go get github.com/katsuyan/jarexe
     jarexe ~.jar
 
 ## Requirements
