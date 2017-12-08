@@ -12,9 +12,13 @@ jarexe ~.jar
 ## Requirements
 
 - Go 1.8
-- [dep](https://github.com/golang/dep)
 
 ## Development
+### Requirements
+
+- Go 1.8
+- [dep](https://github.com/golang/dep)
+
 ### First
 ```
 dep ensure
